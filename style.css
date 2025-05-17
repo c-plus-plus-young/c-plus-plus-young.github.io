@@ -31,10 +31,18 @@ body {
 }
 
 /*Menu bar*/
+#menu-bar {
+    height: 7dvh;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+}
 #menu-bar > * {
     min-font-size: 100px;
     font-size: 7dvh;
-    position: fixed;
+}
+#space-div{
+    height: 7dvh;
 }
 /*#hamburger-icon {*/
 
