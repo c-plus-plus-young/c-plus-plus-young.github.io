@@ -31,7 +31,8 @@ body {
 
 /*Menu bar*/
 #menu-bar > * {
-    font-size: 5vmax;
+    min-font-size: 100px;
+    font-size: 5dvh;
     position: fixed;
 }
 /*#hamburger-icon {*/
