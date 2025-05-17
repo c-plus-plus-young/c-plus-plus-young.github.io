@@ -27,12 +27,13 @@ much as possible into classes to keep this file simple. */
 body {
     background-color: var(--eerie-black);
     color: var(--platinum);
+    font-size: 3dvh;
 }
 
 /*Menu bar*/
 #menu-bar > * {
     min-font-size: 100px;
-    font-size: 5dvh;
+    font-size: 7dvh;
     position: fixed;
 }
 /*#hamburger-icon {*/
