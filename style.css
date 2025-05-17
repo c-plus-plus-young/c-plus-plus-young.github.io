@@ -5,45 +5,70 @@ much as possible into classes to keep this file simple. */
 
 /*Google Icon*/
 .material-symbols-rounded {
-    color: var(--apple-green);
+    /*color: var(--apple-green);*/
     cursor: pointer;
     font-variation-settings:
             'FILL' 0,
             'wght' 400,
-            'GRAD' 0
-            /*'opsz' 24*/
+            'GRAD' 0,
+            'opsz' 24
 }
 
 /*Entire Document, variables*/
 :root {
     /*Color names form Coolors*/
+    /*--eerie-black: #191919;*/
+    /*--apple-green: #A5BE00;*/
+    /*--dark-spring-green: #04773B;*/
+    /*--platinum: #DEE5E5;*/
+
+    --pumpkin: #F3752B;
     --eerie-black: #191919;
-    --apple-green: #A5BE00;
-    --dartmouth-green: #036016;
-    --dark-spring-green: #04773B;
-    --platinum: #DEE5E5;
+    --timberwolf: #D6D5C9;
+    --auburn: #A22C29;
+    --caribbean-current: #037171;
+}
+
+@font-face {
+    font-family: ubuntu;
+    src: url(/assets/fonts/Ubuntu/Ubuntu-Medium.ttf);
 }
 
 body {
     background-color: var(--eerie-black);
-    color: var(--platinum);
+    color: var(--timberwolf);
     font-size: 3dvh;
+    margin: 0;
+    font-family: ubuntu, sans-serif;
 }
 
 /*Menu bar*/
+#space-div{
+    height: max(50px, 7dvh);
+}
 #menu-bar {
-    height: 7dvh;
     position: fixed;
     display: flex;
     flex-direction: column;
+    /*left: max(-34dvh);*/
+    width: max(35dvh, 250px);
+    margin-top: 0;
 }
+/*when toggled:*/
+/*    background-color: var(--platinum);*/
+
 #menu-bar > * {
     min-font-size: 100px;
-    font-size: 7dvh;
+    font-size: max(40px, 5dvh);
+    /*visibility: hidden;*/
+    background-color: var(--caribbean-current);
+    margin-top: 0;
 }
-#space-div{
-    height: 7dvh;
+#hamburger-icon {
+    font-size: max(50px, 7dvh);
+    visibility: visible;
+    background-color: var(--pumpkin);
+    width: 100%;
+    color: var(--eerie-black);
+    /*margin-bottom: 0;*/
 }
-/*#hamburger-icon {*/
-
-/*}*/
