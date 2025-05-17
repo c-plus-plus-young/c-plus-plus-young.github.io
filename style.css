@@ -10,12 +10,13 @@ much as possible into classes to keep this file simple. */
     font-variation-settings:
             'FILL' 0,
             'wght' 400,
-            'GRAD' 0,
-            'opsz' 24
+            'GRAD' 0
+            /*'opsz' 24*/
 }
 
-/**/
+/*Entire Document, variables*/
 :root {
+    /*Color names form Coolors*/
     --eerie-black: #191919;
     --apple-green: #A5BE00;
     --dartmouth-green: #036016;
@@ -27,3 +28,12 @@ body {
     background-color: var(--eerie-black);
     color: var(--platinum);
 }
+
+/*Menu bar*/
+#menu-bar > * {
+    font-size: 5vh;
+    position: fixed;
+}
+/*#hamburger-icon {*/
+
+/*}*/
