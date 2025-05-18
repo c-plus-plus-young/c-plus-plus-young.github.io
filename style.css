@@ -49,10 +49,20 @@ body {
 #menu-bar {
     position: fixed;
     display: flex;
+    gap: 2dvh;
     flex-direction: column;
-    /*left: max(-34dvh);*/
-    width: max(35dvh, 250px);
-    margin-top: 0;
+    background-color: var(--caribbean-current);
+
+    height: 100dvh;
+    width: max(50px, 7dvh);
+    top: max(50px, 7dvh);
+    left: min(-7dvh, -50px);
+
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+}
+#menu-bar.visible {
+    transform: translateX(100%);
 }
 /*when toggled:*/
 /*    background-color: var(--platinum);*/
@@ -61,8 +71,8 @@ body {
     min-font-size: 100px;
     font-size: max(40px, 5dvh);
     /*visibility: hidden;*/
-    background-color: var(--caribbean-current);
-    margin-top: 0;
+    display: flex;
+    justify-content: center;
 }
 #hamburger-icon {
     font-size: max(50px, 7dvh);
@@ -70,5 +80,4 @@ body {
     background-color: var(--pumpkin);
     width: 100%;
     color: var(--eerie-black);
-    /*margin-bottom: 0;*/
 }
