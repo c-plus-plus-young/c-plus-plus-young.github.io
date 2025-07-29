@@ -14,3 +14,9 @@ hamburgerIcon.addEventListener('click', () => {
     //     fill: 'forwards'
     // });
 });
+
+const gameIcon = document.getElementById("game-icon");
+
+gameIcon.addEventListener('click', () => {
+    
+})
