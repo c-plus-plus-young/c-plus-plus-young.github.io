@@ -3,7 +3,7 @@
 .css file is necessary. I'm going to try and group as
 much as possible into classes to keep this file simple. */
 
-/*Google Icon*/
+/*Google Icons*/
 .material-symbols-rounded {
     /*color: var(--apple-green);*/
     cursor: pointer;
@@ -16,68 +16,242 @@ much as possible into classes to keep this file simple. */
 
 /*Entire Document, variables*/
 :root {
-    /*Color names form Coolors*/
-    /*--eerie-black: #191919;*/
-    /*--apple-green: #A5BE00;*/
-    /*--dark-spring-green: #04773B;*/
-    /*--platinum: #DEE5E5;*/
-
-    --pumpkin: #F3752B;
+    --pakistan-green: #003314;
     --eerie-black: #191919;
-    --timberwolf: #D6D5C9;
-    --auburn: #A22C29;
-    --caribbean-current: #037171;
+    --floral-white: #FFF8F0;
+    --forest-green: #548C2F;
+    --cambridge-blue: #6BAB90;
 }
-
 @font-face {
     font-family: ubuntu;
     src: url(/assets/fonts/Ubuntu/Ubuntu-Medium.ttf);
 }
-
 body {
     background-color: var(--eerie-black);
-    color: var(--timberwolf);
+    color: var(--floral-white);
     font-size: 3dvh;
     margin: 0;
     font-family: ubuntu, sans-serif;
 }
 
 /*Menu bar*/
-#space-div{
-    height: max(50px, 7dvh);
-}
 #menu-bar {
     position: fixed;
     display: flex;
     gap: 2dvh;
     flex-direction: column;
-    background-color: var(--caribbean-current);
+    background-color: var(--pakistan-green);
 
     height: 100dvh;
     width: max(50px, 7dvh);
     top: max(50px, 7dvh);
-    left: min(-7dvh, -50px);
 
     transform: translateX(-100%);
     transition: transform 0.5s ease;
 }
 #menu-bar.visible {
-    transform: translateX(100%);
+    transform: translateX(0);
 }
-/*when toggled:*/
-/*    background-color: var(--platinum);*/
-
 #menu-bar > * {
     min-font-size: 100px;
     font-size: max(40px, 5dvh);
-    /*visibility: hidden;*/
     display: flex;
     justify-content: center;
 }
+#top-bar {
+    background-color: var(--pakistan-green);
+    width: 100%;
+    color: var(--floral-white);
+    height: max(50px, 7dvh);
+    display: flex;
+    align-items: center;
+}
 #hamburger-icon {
     font-size: max(50px, 7dvh);
-    visibility: visible;
-    background-color: var(--pumpkin);
-    width: 100%;
+}
+#title {
+    font-size: max(50px, 7dvh);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Main Content Styles */
+main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    margin-top: max(60px, 8dvh);
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.profile-photo {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border: 3px solid var(--cambridge-blue);
+}
+
+.intro-text {
+    max-width: 600px;
+    margin: 1rem auto;
+    line-height: 1.6;
+}
+
+/* Navigation Grid */
+.navigation-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+}
+
+.nav-card {
+    background-color: var(--pakistan-green);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--floral-white);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.nav-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+    background-color: var(--cambridge-blue);
+}
+
+.nav-card .material-symbols-rounded {
+    font-size: 48px;
+    margin-bottom: 1rem;
+}
+
+.nav-card h2 {
+    margin: 0.5rem 0;
+    color: var(--floral-white);
+}
+
+.nav-card p {
+    color: var(--floral-white);
+    margin: 0;
+    font-size: 0.9em;
+}
+
+/* Gallery Styles */
+.category-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+
+.category-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--pakistan-green);
+    color: var(--floral-white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    font-family: ubuntu, sans-serif;
+}
+
+.category-btn:hover {
+    background-color: var(--forest-green);
+    transform: translateY(-2px);
+}
+
+.category-btn.active {
+    background-color: var(--cambridge-blue);
     color: var(--eerie-black);
+}
+
+.photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.photo-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s;
+    background-color: var(--eerie-black);
+}
+
+.photo-item::before {
+    content: '';
+    display: block;
+    padding-top: 150%; /* Default to 2:3 ratio */
+}
+
+.photo-item.landscape::before {
+    padding-top: 66.67%; /* 3:2 ratio for landscape photos */
+}
+
+.photo-item:hover {
+    transform: scale(1.02);
+}
+
+.photo-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Changed from cover to contain */
+    background-color: var(--eerie-black);
+}
+
+.load-more-btn {
+    display: block;
+    margin: 2rem auto;
+    padding: 1rem 2rem;
+    background-color: var(--forest-green);
+    color: var(--floral-white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: ubuntu, sans-serif;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.load-more-btn:hover {
+    background-color: var(--cambridge-blue);
+    color: var(--eerie-black);
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navigation-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-buttons {
+        padding: 0 1rem;
+    }
+    
+    .category-btn {
+        font-size: 0.9rem;
+    }
+    
+    .photo-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        padding: 0 1rem;
+    }
 }

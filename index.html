@@ -5,28 +5,37 @@
     <title>c-plus-plus-young Portfolio</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=computer,menu,photo_camera,stadia_controller" />
     <link rel="stylesheet" href="style.css">
-    <script src="index.js" defer></script>
 </head>
 <body>
-    <span class="material-symbols-rounded" id="hamburger-icon">
-        menu
-    </span>
-    <div id="menu-bar">
-        <span class="material-symbols-rounded">
-            computer
-        </span>
-        <span class="material-symbols-rounded">
-            stadia_controller
-        </span>
-        <span class="material-symbols-rounded">
-            photo_camera
-        </span>
-    </div>
-    <div id="space-div"></div>
-
-    <span>
-        filler text. Lorem ipsum dolor and such
-    </span>
-
+<!--Page Body-->
+    <main>
+        <div class="profile-section">
+            <img src="assets/images/portrait.webp" alt="Profile Photo" class="profile-photo">
+            <h1>Welcome to My Portfolio</h1>
+            <p class="intro-text">
+                Hello! I'm a developer passionate about coding, games, and photography.
+            </p>
+        </div>
+        
+        <div class="navigation-grid">
+            <a href="projects.html" class="nav-card projects">
+                <span class="material-symbols-rounded">computer</span>
+                <h2>Coding Projects</h2>
+                <p>Check out my latest development work</p>
+            </a>
+            
+            <a href="games.html" class="nav-card games">
+                <span class="material-symbols-rounded">stadia_controller</span>
+                <h2>Games</h2>
+                <p>Play some of my game creations</p>
+            </a>
+            
+            <a href="gallery.html" class="nav-card gallery">
+                <span class="material-symbols-rounded">photo_camera</span>
+                <h2>Photo Gallery</h2>
+                <p>View my photography collection</p>
+            </a>
+        </div>
+    </main>
 </body>
 </html>
