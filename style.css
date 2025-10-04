@@ -24,7 +24,7 @@ much as possible into classes to keep this file simple. */
 }
 @font-face {
     font-family: ubuntu;
-    src: url(/assets/fonts/Ubuntu/Ubuntu-Medium.ttf);
+    src: url('assets/fonts/Ubuntu/Ubuntu-Medium.ttf');
 }
 body {
     background-color: var(--eerie-black);
@@ -34,54 +34,13 @@ body {
     font-family: ubuntu, sans-serif;
 }
 
-/*Menu bar*/
-#menu-bar {
-    position: fixed;
-    display: flex;
-    gap: 2dvh;
-    flex-direction: column;
-    background-color: var(--pakistan-green);
 
-    height: 100dvh;
-    width: max(50px, 7dvh);
-    top: max(50px, 7dvh);
-
-    transform: translateX(-100%);
-    transition: transform 0.5s ease;
-}
-#menu-bar.visible {
-    transform: translateX(0);
-}
-#menu-bar > * {
-    min-font-size: 100px;
-    font-size: max(40px, 5dvh);
-    display: flex;
-    justify-content: center;
-}
-#top-bar {
-    background-color: var(--pakistan-green);
-    width: 100%;
-    color: var(--floral-white);
-    height: max(50px, 7dvh);
-    display: flex;
-    align-items: center;
-}
-#hamburger-icon {
-    font-size: max(50px, 7dvh);
-}
-#title {
-    font-size: max(50px, 7dvh);
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-}
 
 /* Main Content Styles */
 main {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
-    margin-top: max(60px, 8dvh);
 }
 
 .profile-section {
