@@ -34,10 +34,37 @@ async function loadImages(category, page = 1) {
         
         const imageCount = index[category] || 0;
         
-        // Now only loop through the number of images that actually exist
+        // Function to check if an image can be loaded
+        const checkImage = (url) => {
+            return new Promise(resolve => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = url;
+            });
+        };
+
+        // Get all images in the category folder
+        const today = new Date();
+        const possibleDates = [];
+        
+        // Add dates from the last 365 days to check
+        for (let i = 0; i < 365; i++) {
+            const date = new Date(today);
+            date.setDate(date.getDate() - i);
+            const dateStr = date.toLocaleDateString('en-GB').replace(/\//g, '-');
+            possibleDates.push(dateStr);
+        }
+
+        // Try to find images with valid date patterns
         for (let i = 1; i <= imageCount; i++) {
-            const imageUrl = `assets/images/${category}/${i}-${category}.webp`;
-            allImages.push(imageUrl);
+            for (const dateStr of possibleDates) {
+                const imageUrl = `assets/images/${category}/${i}-${category}-${dateStr}.webp`;
+                if (await checkImage(imageUrl)) {
+                    allImages.push(imageUrl);
+                    break; // Found the image for this number, move to next
+                }
+            }
         }
     } catch (error) {
         console.warn('Error loading images:', error);
