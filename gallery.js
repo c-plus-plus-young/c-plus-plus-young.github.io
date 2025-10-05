@@ -26,38 +26,22 @@ async function loadImages(category, page = 1) {
     // Get all images in the category folder
     allImages = [];
     
-    // Function to check if an image can be loaded
-    const checkImage = (url) => {
-        return new Promise(resolve => {
-            const img = new Image();
-            img.onload = () => resolve(true);
-            img.onerror = () => resolve(false);
-            img.src = url;
-        });
-    };
-
-    // Try to find images by checking common patterns
-    const today = new Date();
-    const possibleDates = [];
-    
-    // Add dates from the last 30 days
-    for (let i = 0; i < 30; i++) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        const dateStr = date.toLocaleDateString('en-GB').replace(/\//g, '-');
-        possibleDates.push(dateStr);
-    }
-
-    // Check for images with these dates
-    for (let i = 1; i <= 100; i++) {
-        for (const dateStr of possibleDates) {
-            const filename = `${i}-${category}-${dateStr}.webp`;
-            const imageUrl = `assets/images/${category}/${filename}`;
-            
-            if (await checkImage(imageUrl)) {
-                allImages.push(imageUrl);
-            }
+    try {
+        // First, fetch the index to know how many images exist
+        const response = await fetch('assets/images/index.json');
+        if (!response.ok) throw new Error('Could not fetch image index');
+        const index = await response.json();
+        
+        const imageCount = index[category] || 0;
+        
+        // Now only loop through the number of images that actually exist
+        for (let i = 1; i <= imageCount; i++) {
+            const imageUrl = `assets/images/${category}/${i}-${category}.webp`;
+            allImages.push(imageUrl);
         }
+    } catch (error) {
+        console.warn('Error loading images:', error);
+        return [];
     }
 
     // Sort images by date in filename (most recent first)
@@ -89,11 +73,14 @@ function renderImages(images, append = false) {
         img.alt = 'Gallery Photo';
         img.loading = 'lazy';
         
-        // Detect image orientation once loaded
+        // Detect image type and orientation
         img.onload = () => {
-            if (img.naturalWidth > img.naturalHeight) {
-                imgContainer.classList.add('landscape');
+            if (category === 'game-boy') {
+                imgContainer.classList.add('gameboy');
+            } else if (img.naturalWidth < img.naturalHeight) {
+                imgContainer.classList.add('portrait');
             }
+            // landscape is now the default, no class needed
         };
         
         imgContainer.appendChild(img);

@@ -154,11 +154,15 @@ main {
 .photo-item::before {
     content: '';
     display: block;
-    padding-top: 150%; /* Default to 2:3 ratio */
+    padding-top: 66.67%; /* Default to 3:2 landscape ratio */
 }
 
-.photo-item.landscape::before {
-    padding-top: 66.67%; /* 3:2 ratio for landscape photos */
+.photo-item.portrait::before {
+    padding-top: 150%; /* 2:3 ratio for portrait photos */
+}
+
+.photo-item.gameboy::before {
+    padding-top: 87.5%; /* Game Boy aspect ratio (224/256 = 0.875) */
 }
 
 .photo-item:hover {
@@ -173,6 +177,17 @@ main {
     height: 100%;
     object-fit: contain; /* Changed from cover to contain */
     background-color: var(--eerie-black);
+}
+
+/* Special handling for Game Boy photos */
+.photo-item.gameboy img {
+    image-rendering: pixelated; /* Keep pixel art sharp */
+    width: 256px;
+    height: 224px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    object-fit: none; /* Prevent any scaling */
 }
 
 .load-more-btn {
