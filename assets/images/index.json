@@ -1,12 +1,102 @@
 {
-  "favorites": 0,
-  "wildlife": 1,
-  "for-sale": 0,
-  "portraits": 5,
-  "landscape": 1,
-  "automotive": 0,
-  "game-boy": 0,
-  "architecture": 0,
-  "macro": 0,
-  "paleontology": 1
+  "favorites": {
+    "count": 0,
+    "images": []
+  },
+  "wildlife": {
+    "count": 1,
+    "images": [
+      {
+        "filename": "1-wildlife-26-06-2025.webp",
+        "date": "2025-26-06",
+        "width": 1200,
+        "height": 800,
+        "aspectRatio": "landscape"
+      }
+    ]
+  },
+  "for-sale": {
+    "count": 0,
+    "images": []
+  },
+  "portraits": {
+    "count": 5,
+    "images": [
+      {
+        "filename": "02-portraits-09-08-2025.webp",
+        "date": "2025-09-08",
+        "width": 1200,
+        "height": 800,
+        "aspectRatio": "landscape"
+      },
+      {
+        "filename": "03-portraits-09-08-2025.webp",
+        "date": "2025-09-08",
+        "width": 800,
+        "height": 1200,
+        "aspectRatio": "portrait"
+      },
+      {
+        "filename": "04-portraits-09-08-2025.webp",
+        "date": "2025-09-08",
+        "width": 800,
+        "height": 1200,
+        "aspectRatio": "portrait"
+      },
+      {
+        "filename": "05-portraits-09-08-2025.webp",
+        "date": "2025-09-08",
+        "width": 1200,
+        "height": 800,
+        "aspectRatio": "landscape"
+      },
+      {
+        "filename": "1-portraits-09-08-2025.webp",
+        "date": "2025-09-08",
+        "width": 800,
+        "height": 1200,
+        "aspectRatio": "portrait"
+      }
+    ]
+  },
+  "landscape": {
+    "count": 1,
+    "images": [
+      {
+        "filename": "1-landscape-26-06-2025.webp",
+        "date": "2025-26-06",
+        "width": 800,
+        "height": 1200,
+        "aspectRatio": "portrait"
+      }
+    ]
+  },
+  "automotive": {
+    "count": 0,
+    "images": []
+  },
+  "game-boy": {
+    "count": 0,
+    "images": []
+  },
+  "architecture": {
+    "count": 0,
+    "images": []
+  },
+  "macro": {
+    "count": 0,
+    "images": []
+  },
+  "paleontology": {
+    "count": 1,
+    "images": [
+      {
+        "filename": "1-paleontology-06-26-2021.webp",
+        "date": "2021-06-26",
+        "width": 1200,
+        "height": 800,
+        "aspectRatio": "landscape"
+      }
+    ]
+  }
 }
