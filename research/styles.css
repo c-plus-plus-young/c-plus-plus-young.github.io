@@ -1,0 +1,215 @@
+/* CSS Variables - Color Palette */
+:root {
+    --carbon-black: #1c1a1b;
+    --shadow-grey: #342e37;
+
+    --soft-fawn: #dcc48e;
+    --platinum: #f0edee;
+
+    --hunter-green: #355539;
+    --sea-green: #4c9253;
+}
+
+/* Reset & Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+        'Helvetica Neue', sans-serif;
+    background-color: var(--carbon-black);
+    color: var(--platinum);
+    line-height: 1.6;
+}
+
+/* Hero Section */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 600px;
+    animation: fadeInDown 0.8s ease-out;
+}
+
+.project-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: var(--platinum);
+    letter-spacing: 2px;
+}
+
+.project-description {
+    font-size: 1.1rem;
+    color: var(--soft-fawn);
+    margin-bottom: 10px;
+    line-height: 1.8;
+}
+
+/* Button Section */
+.button-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    min-height: 30vh;
+}
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    max-width: 800px;
+}
+
+/* Button Styles */
+.btn {
+    position: relative;
+    padding: 14px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-text {
+    position: relative;
+    z-index: 1;
+}
+
+/* Primary Button */
+.btn-primary {
+    background-color: var(--sea-green);
+    color: var(--platinum);
+}
+
+.btn-primary:hover {
+    background-color: var(--hunter-green);
+    box-shadow: 0 10px 20px rgba(68, 146, 83, 0.4);
+    transform: translateY(-10px);
+}
+
+.btn-primary:active {
+    transform: translateY(-6px);
+    box-shadow: 0 6px 12px rgba(68, 146, 83, 0.3);
+}
+
+/* Placeholder Buttons */
+.btn-placeholder {
+    background-color: var(--shadow-grey);
+    color: var(--soft-fawn);
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.btn-placeholder:hover {
+    opacity: 0.85;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-placeholder:disabled {
+    cursor: not-allowed;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+/* Tablets (768px and below) */
+@media (max-width: 768px) {
+    .hero {
+        min-height: 40vh;
+        padding: 40px 20px;
+    }
+
+    .project-title {
+        font-size: 2.5rem;
+    }
+
+    .project-description {
+        font-size: 1rem;
+    }
+
+    .button-container {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 16px 24px;
+        min-height: 50px;
+    }
+}
+
+/* Mobile (500px and below) */
+@media (max-width: 500px) {
+    .hero {
+        min-height: 35vh;
+        padding: 30px 15px;
+    }
+
+    .project-title {
+        font-size: 2rem;
+        letter-spacing: 1px;
+        margin-bottom: 15px;
+    }
+
+    .project-description {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .button-section {
+        padding: 30px 15px;
+        min-height: 25vh;
+    }
+
+    .button-container {
+        gap: 12px;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        min-height: 48px;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-8px);
+    }
+}
