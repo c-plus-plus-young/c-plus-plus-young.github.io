@@ -7,7 +7,8 @@
     "count": 1,
     "images": [
       {
-        "filename": "1-wildlife-26-06-2025.webp",
+        "filename": "Tern-wildlife-26-06-2025.webp",
+        "altText": "tern",
         "date": "2025-26-06",
         "width": 1200,
         "height": 800,
@@ -23,35 +24,40 @@
     "count": 5,
     "images": [
       {
-        "filename": "02-portraits-09-08-2025.webp",
-        "date": "2025-09-08",
-        "width": 1200,
-        "height": 800,
-        "aspectRatio": "landscape"
-      },
-      {
-        "filename": "03-portraits-09-08-2025.webp",
+        "filename": "CoupleBehindHat-portraits-09-08-2025.webp",
+        "altText": "couple behind hat",
         "date": "2025-09-08",
         "width": 800,
         "height": 1200,
         "aspectRatio": "portrait"
       },
       {
-        "filename": "04-portraits-09-08-2025.webp",
+        "filename": "CoupleDip-portraits-09-08-2025.webp",
+        "altText": "couple dip",
         "date": "2025-09-08",
         "width": 800,
         "height": 1200,
         "aspectRatio": "portrait"
       },
       {
-        "filename": "05-portraits-09-08-2025.webp",
+        "filename": "CoupleHugging-portraits-09-08-2025.webp",
+        "altText": "couple hugging",
         "date": "2025-09-08",
         "width": 1200,
         "height": 800,
         "aspectRatio": "landscape"
       },
       {
-        "filename": "1-portraits-09-08-2025.webp",
+        "filename": "CoupleKissingDip-portraits-09-08-2025.webp",
+        "altText": "couple kissing dip",
+        "date": "2025-09-08",
+        "width": 1200,
+        "height": 800,
+        "aspectRatio": "landscape"
+      },
+      {
+        "filename": "WomanInCowboyHat-portraits-09-08-2025.webp",
+        "altText": "woman in cowboy hat",
         "date": "2025-09-08",
         "width": 800,
         "height": 1200,
@@ -63,7 +69,8 @@
     "count": 1,
     "images": [
       {
-        "filename": "1-landscape-26-06-2025.webp",
+        "filename": "SignInGarden-landscape-26-06-2025.webp",
+        "altText": "sign in garden",
         "date": "2025-26-06",
         "width": 800,
         "height": 1200,
@@ -91,7 +98,8 @@
     "count": 1,
     "images": [
       {
-        "filename": "1-paleontology-06-26-2021.webp",
+        "filename": "Gorgasaurus-paleontology-06-26-2021.webp",
+        "altText": "gorgasaurus",
         "date": "2021-06-26",
         "width": 1200,
         "height": 800,

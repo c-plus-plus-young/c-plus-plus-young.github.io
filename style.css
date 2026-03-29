@@ -137,9 +137,10 @@ main {
 
 .photo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
     margin-bottom: 2rem;
+    padding: 1rem;
 }
 
 .photo-item {
@@ -149,34 +150,42 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s;
     background-color: var(--eerie-black);
+    aspect-ratio: 3/2;
 }
 
-.photo-item::before {
-    content: '';
-    display: block;
-    padding-top: 66.67%; /* Default to 3:2 landscape ratio */
+.photo-item.portrait {
+    aspect-ratio: 2/3;
 }
 
-.photo-item.portrait::before {
-    padding-top: 150%; /* 2:3 ratio for portrait photos */
-}
-
-.photo-item.gameboy::before {
-    padding-top: 87.5%; /* Game Boy aspect ratio (224/256 = 0.875) */
+.photo-item.gameboy {
+    aspect-ratio: 256/224;
 }
 
 .photo-item:hover {
     transform: scale(1.02);
+    z-index: 1;
 }
 
 .photo-item img {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Changed from cover to contain */
+    object-fit: cover;
     background-color: var(--eerie-black);
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .photo-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        grid-auto-rows: 150px;
+    }
+    
+    /* On mobile, don't span multiple columns/rows */
+    .photo-item.landscape,
+    .photo-item.portrait {
+        grid-column: span 1;
+        grid-row: span 1;
+    }
 }
 
 /* Special handling for Game Boy photos */

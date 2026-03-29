@@ -1,17 +1,22 @@
 
-document.addEventListener('DOMContentLoaded', () => {
-    // State management
-    let currentCategory = 'favorites';
-    let currentPage = 1;
-    const imagesPerPage = 12;
-    let allImages = [];
-    let categoryData = null;  // Cache for category data from index.json
+// State management
+let currentCategory = 'favorites';
+let currentPage = 1;
+const imagesPerPage = 12;
+let allImages = [];
+let categoryData = null;  // Cache for category data from index.json
 
-    // DOM Elements
-    const photoGrid = document.querySelector('.photo-grid');
-    const loadMoreBtn = document.getElementById('load-more');
-    const categoryButtons = document.querySelectorAll('.category-btn')
-});
+// DOM Elements
+const photoGrid = document.querySelector('.photo-grid');
+const loadMoreBtn = document.getElementById('load-more');
+const categoryButtons = document.querySelectorAll('.category-btn');
+
+// Function to update URL with current category
+function updateURL(category) {
+    const url = new URL(window.location);
+    url.searchParams.set('category', category);
+    window.history.pushState({}, '', url);
+}
 
 // Function to load and display images for current category
 async function loadImages(category, page = 1) {
@@ -46,7 +51,7 @@ async function loadImages(category, page = 1) {
             
             const img = document.createElement('img');
             img.src = `assets/images/${category}/${imageData.filename}`;
-            img.alt = `${category} photo from ${imageData.date}`;
+            img.alt = imageData.altText || `${category} photo from ${imageData.date}`;
             img.loading = 'lazy';
             
             photoElement.appendChild(img);
@@ -55,32 +60,60 @@ async function loadImages(category, page = 1) {
 
         // Update load more button visibility
         loadMoreBtn.style.display = endIndex < allImages.length ? 'block' : 'none';
+
+        // Update URL when category changes
+        if (page === 1) {
+            updateURL(category);
+        }
     } catch (error) {
         console.error('Error loading images:', error);
         photoGrid.innerHTML = '<p class="error">Error loading images. Please try again later.</p>';
     }
 }
 
+// Function to switch category
+function switchCategory(category) {
+    if (category !== currentCategory) {
+        currentCategory = category;
+        currentPage = 1;
+        loadImages(currentCategory);
+        
+        // Update active button state
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`[data-category="${category}"]`)?.classList.add('active');
+    }
+}
+
 // Event Listeners
-categoryButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const newCategory = button.dataset.category;
-        if (newCategory !== currentCategory) {
-            currentCategory = newCategory;
-            currentPage = 1;
-            loadImages(currentCategory);
-            
-            // Update active button state
-            categoryButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        }
+document.addEventListener('DOMContentLoaded', () => {
+    // Check URL for initial category
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryParam = urlParams.get('category');
+    
+    if (categoryParam && categoryData?.[categoryParam]) {
+        currentCategory = categoryParam;
+    }
+    
+    // Set up category button listeners
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            switchCategory(button.dataset.category);
+        });
     });
+
+    // Set up load more button listener
+    loadMoreBtn.addEventListener('click', () => {
+        currentPage++;
+        loadImages(currentCategory, currentPage);
+    });
+
+    // Load initial category
+    switchCategory(currentCategory);
 });
 
-loadMoreBtn.addEventListener('click', () => {
-    currentPage++;
-    loadImages(currentCategory, currentPage);
+// Handle browser back/forward buttons
+window.addEventListener('popstate', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category') || 'favorites';
+    switchCategory(category);
 });
-
-// Initial load
-loadImages(currentCategory);

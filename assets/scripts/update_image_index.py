@@ -1,7 +1,5 @@
-import os
 import json
 import re
-from datetime import datetime
 from pathlib import Path
 from PIL import Image
 
@@ -41,16 +39,25 @@ categories = [
     "paleontology"
 ]
 
-def extract_date_from_filename(filename):
-    """Extract date from filename pattern like '1-category-MM-DD-YYYY'"""
-    match = re.search(r'(\d{2})-(\d{2})-(\d{4})', filename)
-    if match:
-        month, day, year = match.groups()
-        try:
-            return f"{year}-{month}-{day}"
-        except ValueError:
-            return None
-    return None
+def parse_filename_info(filename):
+    """Extract date and alt text from filename pattern like 'AltText-category-MM-DD-YYYY'"""
+    # Split filename into parts
+    parts = filename.replace('.webp', '').split('-')
+    if len(parts) < 4:
+        return None, None
+    
+    # Extract alt text from the first part
+    alt_text = parts[0]
+    # Convert camelCase to space-separated text
+    alt_text = re.sub(r'([a-z])([A-Z])', r'\1 \2', alt_text).lower()
+    
+    # Extract date from the last parts
+    try:
+        month, day, year = parts[-3:]
+        date = f"{year}-{month}-{day}"
+        return alt_text, date
+    except (ValueError, IndexError):
+        return alt_text, None
 
 def get_image_metadata(file_path):
     """Get image metadata including dimensions and aspect ratio"""
@@ -76,12 +83,13 @@ def scan_category_directory(directory):
     for file_path in directory.glob('*.webp'):
         if file_path.is_file():
             filename = file_path.name
-            date = extract_date_from_filename(filename)
+            alt_text, date = parse_filename_info(filename)
             metadata = get_image_metadata(file_path)
             
             if metadata:
                 images.append({
                     "filename": filename,
+                    "altText": alt_text,
                     "date": date,
                     **metadata
                 })
