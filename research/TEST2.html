@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>soyDockDB Screenshot Generator</title>
+  <script src="https://3dmol.org/build/3Dmol-min.js"></script>
+  <style>
+    /* Theme colors from global.css */
+    :root {
+      --main-background: #1c1a1b;
+      --card-background: #342e37;
+      --primary-text: #f0edee;
+      --secondary-text: #dcc48e;
+      --primary-accent: #355539;
+      --accent-color: #4c9253;
+      --border-color: #4c9253;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: var(--main-background);
+      color: var(--primary-text);
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: var(--primary-text);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .controls {
+      background: var(--card-background);
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .control-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      color: var(--secondary-text);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    
+    select, input, button {
+      width: 100%;
+      padding: 10px;
+      background: var(--main-background);
+      color: var(--primary-text);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    button {
+      background: var(--primary-accent);
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 10px;
+      transition: background 0.2s;
+    }
+    
+    button:hover {
+      background: var(--accent-color);
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .tab {
+      flex: 1;
+      padding: 12px;
+      background: var(--card-background);
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    
+    .tab:hover {
+      background: var(--primary-accent);
+    }
+    
+    .tab.active {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+    
+    .viewer-container {
+      background: var(--card-background);
+      border-radius: 8px;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+    }
+    
+    #viewer {
+      width: 100%;
+      height: 600px;
+      position: relative;
+      border-radius: 4px;
+    }
+    
+    .info {
+      background: var(--card-background);
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .info p {
+      color: var(--secondary-text);
+      margin: 5px 0;
+    }
+    
+    .info strong {
+      color: var(--primary-text);
+    }
+    
+    .loading {
+      text-align: center;
+      color: var(--secondary-text);
+      padding: 20px;
+    }
+    
+    .error {
+      background: #dc3545;
+      color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>soyDockDB Screenshot Generator</h1>
+    <p style="text-align: center; color: var(--secondary-text); margin-bottom: 20px;">
+      Sample: Protein=<strong>csBt</strong> | Ligand=<strong>thiophanate-methyl (fungicide)</strong><br>
+      <small>Both: protein (stick+skin) + ligand (stick) | Protein: cartoon | Ligand: stick</small>
+    </p>
+    
+    <div class="controls">
+      <div class="control-group">
+        <label for="protein">Select Protein:</label>
+        <select id="protein">
+          <option value="">Loading...</option>
+        </select>
+      </div>
+      
+      <div class="control-group">
+        <label for="ligand">Select Ligand:</label>
+        <select id="ligand">
+          <option value="">Select a protein first</option>
+        </select>
+      </div>
+      
+      <button id="loadBtn">Load Structures</button>
+    </div>
+    
+    <div class="tabs">
+      <div class="tab active" data-view="both">Both</div>
+      <div class="tab" data-view="protein">Protein Only</div>
+      <div class="tab" data-view="ligand">Ligand Only</div>
+    </div>
+    
+    <div class="viewer-container">
+      <div id="viewer"></div>
+    </div>
+    
+    <div class="info" id="info" style="display: none;">
+      <p><strong>Protein:</strong> <span id="infoProtein"></span></p>
+      <p><strong>Ligand:</strong> <span id="infoLigand"></span></p>
+      <p><strong>Affinity:</strong> <span id="infoAffinity"></span> kcal/mol</p>
+      <p><strong>Mode:</strong> <span id="infoMode"></span></p>
+    </div>
+  </div>
+  
+  <script>
+    // Hardcoded sample data - no backend needed
+    const SAMPLE_PROTEIN = 'csBt';
+    const SAMPLE_LIGAND = 'thiophanate-methyl';
+    const LIGAND_PATH_PREFIX = 'fungicideDocked';
+    
+    // These will be loaded from local files
+    let proteinStructure = null;
+    let ligandStructure = null;
+    
+    const API_BASE = 'http://localhost:3007/api';
+    let viewer;
+    let currentProteinStructure = null;
+    let currentLigandStructure = null;
+    let currentView = 'both';
+    
+    // Initialize 3Dmol viewer
+    function initViewer() {
+      const element = document.getElementById('viewer');
+      const config = { backgroundColor: '#342e37' };
+      viewer = $3Dmol.createViewer(element, config);
+    }
+    
+    // Load sample structures from data directory
+    async function loadSampleStructures() {
+      try {
+        console.log('Starting to load structures...');
+        
+        // Load protein structure
+        const proteinPath = `/data/proteins/${SAMPLE_PROTEIN}.pdb`;
+        console.log('Loading protein from:', proteinPath);
+        const proteinResponse = await fetch(proteinPath);
+        console.log('Protein response status:', proteinResponse.status);
+        
+        if (!proteinResponse.ok) {
+          throw new Error(`Failed to load protein: ${proteinResponse.status} ${proteinResponse.statusText}`);
+        }
+        
+        proteinStructure = await proteinResponse.text();
+        console.log('Protein loaded, length:', proteinStructure.length);
+        
+        // Load ligand structure  
+        const ligandPath = `/data/csbt/${LIGAND_PATH_PREFIX}/${SAMPLE_LIGAND}/${SAMPLE_LIGAND}_out.pdbqt`;
+        console.log('Loading ligand from:', ligandPath);
+        const ligandResponse = await fetch(ligandPath);
+        console.log('Ligand response status:', ligandResponse.status);
+        
+        if (!ligandResponse.ok) {
+          throw new Error(`Failed to load ligand: ${ligandResponse.status} ${ligandResponse.statusText}`);
+        }
+        
+        ligandStructure = await ligandResponse.text();
+        console.log('Ligand loaded, length:', ligandStructure.length);
+        
+        // Extract only the first MODEL and clean it for 3Dmol
+        const firstModelMatch = ligandStructure.match(/MODEL 1([\s\S]*?)ENDMDL/);
+        if (firstModelMatch) {
+          const modelContent = firstModelMatch[1];
+          // Keep only ATOM/HETATM lines and REMARK lines, remove BRANCH/ENDBRANCH/TORSDOF/ROOT/ENDROOT
+          const cleanedLines = modelContent.split('\n').filter(line => {
+            const trimmed = line.trim();
+            return trimmed.startsWith('ATOM') || 
+                   trimmed.startsWith('HETATM') ||
+                   trimmed.startsWith('REMARK');
+          });
+          ligandStructure = cleanedLines.join('\n');
+          console.log('Extracted and cleaned first model, new length:', ligandStructure.length);
+        } else {
+          console.warn('Could not find MODEL 1...ENDMDL, using full structure');
+        }
+        
+        // Extract info from ligand
+        const affinityMatch = ligandStructure.match(/REMARK VINA RESULT:\s+([-\d.]+)/);
+        const affinity = affinityMatch ? affinityMatch[1] : 'N/A';
+        
+        // Update info panel
+        document.getElementById('infoProtein').textContent = SAMPLE_PROTEIN;
+        document.getElementById('infoLigand').textContent = SAMPLE_LIGAND;
+        document.getElementById('infoAffinity').textContent = affinity;
+        document.getElementById('infoMode').textContent = '1';
+        document.getElementById('info').style.display = 'block';
+        
+        // Set current structures and render
+        currentProteinStructure = proteinStructure;
+        currentLigandStructure = ligandStructure;
+        console.log('Rendering structures...');
+        renderStructures();
+        console.log('Structures rendered successfully!');
+        
+        // Hide controls since we're using hardcoded data
+        document.querySelector('.controls').style.display = 'none';
+        
+      } catch (error) {
+        console.error('Error loading structures:', error);
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error';
+        errorDiv.innerHTML = `<strong>Error loading structures:</strong><br>${error.message}<br><br>Make sure to serve this file via HTTP server (not file://).<br>Try: <code>python3 -m http.server 8090</code> from /opt/soyDockDB<br>Then open: <code>http://localhost:8090/dev-screenshots/viewer.html</code>`;
+        document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.controls'));
+      }
+    }
+    
+    // Render structures based on current view
+    function renderStructures() {
+      viewer.clear();
+      
+      console.log('Rendering view:', currentView);
+      console.log('Has protein structure:', !!currentProteinStructure);
+      console.log('Has ligand structure:', !!currentLigandStructure);
+      
+      if (currentView === 'both') {
+        // Both protein and ligand
+        if (currentProteinStructure) {
+          console.log('Adding protein model...');
+          viewer.addModel(currentProteinStructure, 'pdb');
+          viewer.setStyle({model: 0}, {
+            stick: { radius: 0.15 }, 
+            sphere: { scale: 0.3 }
+          });
+          viewer.addSurface($3Dmol.SurfaceType.VDW, {
+            opacity: 1.0,
+            color: '#4c9253'
+          }, {model: 0});
+        }
+        if (currentLigandStructure) {
+          console.log('Adding ligand model...');
+          console.log('Ligand data length:', currentLigandStructure.length);
+          console.log('First 200 chars:', currentLigandStructure.substring(0, 200));
+          viewer.addModel(currentLigandStructure, 'pdb');
+          viewer.setStyle({model: 1}, {
+            stick: {
+              colorscheme: 'Jmol',
+              radius: 0.3
+            },
+            sphere: {
+              scale: 0.3
+            }
+          });
+        }
+      } else if (currentView === 'protein') {
+        // Protein only - cartoon style
+        if (currentProteinStructure) {
+          console.log('Adding protein model (cartoon)...');
+          viewer.addModel(currentProteinStructure, 'pdb');
+          viewer.setStyle({model: 0}, {cartoon: {color: 'spectrum'}});
+        }
+      } else if (currentView === 'ligand') {
+        // Ligand only
+        if (currentLigandStructure) {
+          console.log('Adding ligand model only...');
+          console.log('Ligand data length:', currentLigandStructure.length);
+          console.log('First 200 chars:', currentLigandStructure.substring(0, 200));
+          viewer.addModel(currentLigandStructure, 'pdb');
+          viewer.setStyle({model: 0}, {
+            stick: {
+              colorscheme: 'Jmol',
+              radius: 0.3
+            },
+            sphere: {
+              scale: 0.3
+            }
+          });
+          console.log('Ligand model added and styled');
+        }
+      }
+      
+      console.log('Zooming and rendering...');
+      viewer.zoomTo();
+      viewer.render();
+      viewer.spin(true);  // Enable auto-rotation
+      console.log('Render complete');
+    }
+    
+    // Event listeners
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        currentView = e.target.dataset.view;
+        renderStructures();
+      });
+    });
+    
+    // Initialize and auto-load
+    initViewer();
+    loadSampleStructures();
+  </script>
+</body>
+</html>

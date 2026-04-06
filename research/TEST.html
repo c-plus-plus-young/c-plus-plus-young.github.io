@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ligand Visualization Mode Showcase</title>
+    <script src="https://3Dmol.org/build/3Dmol-min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .header .subtitle {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .controls {
+            background: white;
+            padding: 15px 20px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-group label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            white-space: nowrap;
+        }
+        
+        select {
+            padding: 8px 12px;
+            border: 2px solid #4c9253;
+            border-radius: 4px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            min-width: 200px;
+        }
+        
+        button {
+            padding: 8px 16px;
+            border: 2px solid #4c9253;
+            background: white;
+            color: #4c9253;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background: #4c9253;
+            color: white;
+        }
+        
+        input[type="color"] {
+            width: 40px;
+            height: 35px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            font-weight: normal;
+            cursor: pointer;
+            margin: 0;
+        }
+        
+        .viewer-container {
+            flex: 1;
+            position: relative;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .viewer {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .mode-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(76, 146, 83, 0.95);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .description-badge {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .description-badge h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .description-badge p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🧪 Ligand Visualization Mode Showcase</h1>
+        <p class="subtitle">Full-page viewer with all visualization styles from the main website and additional options</p>
+    </div>
+    
+    <div class="controls">
+        <div class="control-group">
+            <label>Visualization Mode:</label>
+            <select id="modeSelect" onchange="changeMode()"></select>
+        </div>
+        
+        <div class="control-group">
+            <button onclick="loadDefaultLigand()">Default Sample</button>
+            <button onclick="loadFromFile()">Load File</button>
+        </div>
+        
+        <div class="control-group">
+            <label>Background:</label>
+            <input type="color" id="bgColor" value="#ffffff" onchange="updateBackground()">
+            <button onclick="setBackground('#ffffff')">White</button>
+            <button onclick="setBackground('#000000')">Black</button>
+            <button onclick="setBackground('#342e37')">Grey</button>
+        </div>
+        
+        <div class="control-group">
+            <label>Color Scheme:</label>
+            <select id="colorScheme" onchange="updateViewer()">
+                <option value="default">Default (CPK)</option>
+                <option value="greenCarbon">Green Carbon</option>
+                <option value="cyanCarbon">Cyan Carbon</option>
+                <option value="magentaCarbon">Magenta Carbon</option>
+                <option value="whiteCarbon">White Carbon</option>
+            </select>
+        </div>
+        
+        <div class="checkbox-item">
+            <input type="checkbox" id="showHydrogens" onchange="updateViewer()">
+            <label for="showHydrogens">Hydrogens</label>
+        </div>
+        
+        <div class="checkbox-item">
+            <input type="checkbox" id="showLabels" onchange="updateViewer()">
+            <label for="showLabels">Labels</label>
+        </div>
+    </div>
+    
+    <div class="viewer-container">
+        <div class="mode-badge" id="modeBadge"></div>
+        <div class="description-badge" id="descBadge">
+            <h3 id="modeTitle"></h3>
+            <p id="modeDesc"></p>
+        </div>
+        <div id="mainViewer" class="viewer"></div>
+    </div>
+    
+    <input type="file" id="fileInput" style="display: none;" accept=".pdbqt,.pdb,.mol,.mol2,.sdf">
+    
+    <script>
+        let viewer;
+        let currentLigandData = null;
+        let currentModeIndex = 0;
+        
+        const viewerConfigs = [
+            {
+                id: 'websiteStick',
+                title: '★ Stick (Website Default)',
+                description: 'Default ligand style in main website. Ball-and-stick with greenCarbon colorscheme.',
+                style: { 
+                    stick: { colorscheme: 'greenCarbon', radius: 0.15 },
+                    sphere: { scale: 0.3 }
+                }
+            },
+            {
+                id: 'websiteSphere',
+                title: '★ Sphere (Website Option)',
+                description: 'Sphere style available in main website.',
+                style: { sphere: { scale: 0.25 } }
+            },
+            {
+                id: 'websiteLine',
+                title: '★ Line (Website Option)',
+                description: 'Line style available in main website.',
+                style: { line: { linewidth: 2 } }
+            },
+            {
+                id: 'websiteStickSkin',
+                title: '★ Stick + Skin Surface',
+                description: 'Ball-and-stick with VDW skin surface in soft-fawn (#dcc48e). Website option.',
+                style: { 
+                    stick: { colorscheme: 'greenCarbon', radius: 0.15 },
+                    sphere: { scale: 0.3 }
+                },
+                surface: 'VDW',
+                surfaceColor: '#dcc48e'
+            },
+            {
+                id: 'websiteStickPolarity',
+                title: '★ Stick + Polarity',
+                description: 'Ball-and-stick with polarity surface (RWB). Website option.',
+                style: { 
+                    stick: { colorscheme: 'greenCarbon', radius: 0.15 },
+                    sphere: { scale: 0.3 }
+                },
+                surface: 'VDW',
+                surfacePolarity: true
+            },
+            {
+                id: 'stick',
+                title: 'Stick Only (Pure)',
+                description: 'Pure stick - just bonds, no spheres. Cleaner than ball-and-stick.',
+                style: { stick: { radius: 0.15 } }
+            },
+            {
+                id: 'ballstick',
+                title: 'Ball & Stick',
+                description: 'Classic chemistry textbook style with visible atoms and bonds.',
+                style: { 
+                    stick: { radius: 0.12 },
+                    sphere: { scale: 0.25 }
+                }
+            },
+            {
+                id: 'sphere',
+                title: 'Sphere (Space-Filling)',
+                description: 'Van der Waals spheres showing molecular volume.',
+                style: { sphere: { scale: 0.3 } }
+            },
+            {
+                id: 'line',
+                title: 'Line (Wireframe)',
+                description: 'Minimal wireframe. Good for complex structures.',
+                style: { line: { linewidth: 2 } }
+            },
+            {
+                id: 'cross',
+                title: 'Cross',
+                description: 'Atoms as crosses. Useful for dense structures.',
+                style: { cross: { radius: 0.2 } }
+            },
+            {
+                id: 'stickSurface',
+                title: 'Stick + VDW Surface',
+                description: 'Pure stick with Van der Waals surface.',
+                style: { stick: { radius: 0.15 } },
+                surface: 'VDW'
+            },
+            {
+                id: 'stickSAS',
+                title: 'Stick + SAS Surface',
+                description: 'Solvent Accessible Surface showing where solvent reaches.',
+                style: { stick: { radius: 0.15 } },
+                surface: 'SAS'
+            },
+            {
+                id: 'stickSES',
+                title: 'Stick + SES Surface',
+                description: 'Solvent Excluded Surface (molecular surface).',
+                style: { stick: { radius: 0.15 } },
+                surface: 'SES'
+            }
+        ];
+        
+        function initViewer() {
+            viewer = $3Dmol.createViewer(document.getElementById('mainViewer'), { 
+                backgroundColor: 'white',
+                antialias: true
+            });
+            
+            // Populate mode selector
+            const select = document.getElementById('modeSelect');
+            viewerConfigs.forEach((config, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = config.title;
+                select.appendChild(option);
+            });
+            
+            loadDefaultLigand();
+        }
+        
+        function changeMode() {
+            currentModeIndex = parseInt(document.getElementById('modeSelect').value);
+            updateViewer();
+        }
+        
+        function loadDefaultLigand() {
+            const caffeinePDB = `COMPND    CAFFEINE
+AUTHOR    GENERATED BY 3DMOL.JS
+HETATM    1  C1  CAF A   1       1.213   0.000   0.148  1.00  0.00           C
+HETATM    2  C2  CAF A   1      -0.087   0.000  -0.612  1.00  0.00           C
+HETATM    3  C3  CAF A   1      -1.213   0.000   0.148  1.00  0.00           C
+HETATM    4  C4  CAF A   1      -0.878   0.000   1.484  1.00  0.00           C
+HETATM    5  C5  CAF A   1       0.523   0.000   1.484  1.00  0.00           C
+HETATM    6  N1  CAF A   1       2.387   0.000  -0.612  1.00  0.00           N
+HETATM    7  N2  CAF A   1      -0.087   0.000  -1.976  1.00  0.00           N
+HETATM    8  N3  CAF A   1      -2.544   0.000  -0.280  1.00  0.00           N
+HETATM    9  N4  CAF A   1       1.213   0.000   2.644  1.00  0.00           N
+HETATM   10  O1  CAF A   1      -1.768   0.000   2.314  1.00  0.00           O
+HETATM   11  O2  CAF A   1       2.387   0.000  -1.842  1.00  0.00           O
+HETATM   12  C6  CAF A   1       3.647   0.000   0.148  1.00  0.00           C
+HETATM   13  C7  CAF A   1      -1.347   0.000  -2.736  1.00  0.00           C
+HETATM   14  C8  CAF A   1      -3.647   0.000   0.610  1.00  0.00           C
+HETATM   15  H1  CAF A   1       4.537   0.000  -0.472  1.00  0.00           H
+HETATM   16  H2  CAF A   1       3.647   0.890   0.768  1.00  0.00           H
+HETATM   17  H3  CAF A   1       3.647  -0.890   0.768  1.00  0.00           H
+HETATM   18  H4  CAF A   1      -1.117   0.000  -3.802  1.00  0.00           H
+HETATM   19  H5  CAF A   1      -1.967   0.890  -2.536  1.00  0.00           H
+HETATM   20  H6  CAF A   1      -1.967  -0.890  -2.536  1.00  0.00           H
+HETATM   21  H7  CAF A   1      -4.537   0.000   0.000  1.00  0.00           H
+HETATM   22  H8  CAF A   1      -3.647   0.890   1.230  1.00  0.00           H
+HETATM   23  H9  CAF A   1      -3.647  -0.890   1.230  1.00  0.00           H
+HETATM   24  H10 CAF A   1       0.713   0.000   3.534  1.00  0.00           H
+HETATM   25  H11 CAF A   1       2.213   0.000   2.644  1.00  0.00           H
+CONECT    1    2    5    6
+CONECT    2    1    3    7
+CONECT    3    2    4    8
+CONECT    4    3    5   10
+CONECT    5    1    4    9
+CONECT    6    1   11   12
+CONECT    7    2   13
+CONECT    8    3   14
+CONECT    9    5   24   25
+CONECT   10    4
+CONECT   11    6
+CONECT   12    6   15   16   17
+CONECT   13    7   18   19   20
+CONECT   14    8   21   22   23
+CONECT   15   12
+CONECT   16   12
+CONECT   17   12
+CONECT   18   13
+CONECT   19   13
+CONECT   20   13
+CONECT   21   14
+CONECT   22   14
+CONECT   23   14
+CONECT   24    9
+CONECT   25    9
+END`;
+            
+            currentLigandData = caffeinePDB;
+            updateViewer();
+        }
+        
+        function loadFromFile() {
+            document.getElementById('fileInput').click();
+        }
+        
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentLigandData = e.target.result;
+                    updateViewer();
+                };
+                reader.readAsText(file);
+            }
+        });
+        
+        function updateViewer() {
+            if (!currentLigandData || !viewer) return;
+            
+            const config = viewerConfigs[currentModeIndex];
+            const showHydrogens = document.getElementById('showHydrogens').checked;
+            const showLabels = document.getElementById('showLabels').checked;
+            const colorScheme = document.getElementById('colorScheme').value;
+            
+            viewer.clear();
+            viewer.addModel(currentLigandData, 'pdb');
+            
+            let style = JSON.parse(JSON.stringify(config.style));
+            
+            // Apply color scheme
+            Object.keys(style).forEach(styleType => {
+                if (!style[styleType].colorscheme) {
+                    style[styleType].colorscheme = colorScheme;
+                }
+            });
+            
+            const selector = showHydrogens ? {} : { elem: '!H' };
+            viewer.setStyle(selector, style);
+            
+            // Add surface if specified
+            if (config.surface) {
+                const surfaceType = $3Dmol.SurfaceType[config.surface];
+                let surfaceOptions = { opacity: 0.8 };
+                
+                if (config.surfaceColor) {
+                    surfaceOptions.color = config.surfaceColor;
+                } else if (config.surfacePolarity) {
+                    surfaceOptions.colorscheme = 'RWB';
+                } else {
+                    surfaceOptions.colorscheme = colorScheme;
+                }
+                
+                viewer.addSurface(surfaceType, surfaceOptions);
+            }
+            
+            if (showLabels) {
+                viewer.addPropertyLabels('elem', {}, {
+                    fontSize: 14,
+                    fontColor: 'black',
+                    backgroundColor: 'rgba(255,255,255,0.8)',
+                    backgroundOpacity: 0.8
+                });
+            }
+            
+            // Update badges
+            document.getElementById('modeBadge').textContent = config.title;
+            document.getElementById('modeTitle').textContent = config.title;
+            document.getElementById('modeDesc').textContent = config.description;
+            
+            viewer.zoomTo();
+            viewer.render();
+        }
+        
+        function setBackground(color) {
+            document.getElementById('bgColor').value = color;
+            updateBackground();
+        }
+        
+        function updateBackground() {
+            const color = document.getElementById('bgColor').value;
+            viewer.setBackgroundColor(color);
+            viewer.render();
+        }
+        
+        window.onload = initViewer;
+    </script>
+</body>
+</html>
+
+
