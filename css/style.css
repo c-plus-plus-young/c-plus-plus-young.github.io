@@ -1,0 +1,45 @@
+:root {
+    --graphite: #2A2B2A;
+    --ghost-white: #FBFBFF;
+    --bright-sky: #01BAEF;
+}
+
+/* lch(43.1923 0 66.0618) */
+/* oklab(0.510278 -4.47035e-8 2.98023e-8) */
+
+@font-face {
+    font-family: "DepartureMono";
+    src: url("../assets/fonts/DepartureMono-1.500/DepartureMono-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+  /* Default styles for all orientations */
+  background-color: var(--graphite);
+  color: var(--ghost-white);
+  font-family: DepartureMono, monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+p {
+    border: 1px solid var(--ghost-white);
+}
+
+img {
+    max-width: 100%;
+}
+
+[orientation="portrait"] {
+  /* Styles for portrait orientation */
+
+  /* Hide side elements, but show hamburger menu */
+}
+
+[orientation="landscape"] {
+  /* Styles for landscape orientation */
+
+  /* Show side elements, but hide hamburger menu */
+}
