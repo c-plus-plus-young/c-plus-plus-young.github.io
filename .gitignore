@@ -1,3 +1,4 @@
 # Don't include .pngs like the logo,
 # make all images on website .svg
 *.png
+*.ase
