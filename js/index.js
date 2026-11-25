@@ -5,4 +5,8 @@
 const viewportWidth = window.innerWidth;
 const viewportHeight = window.innerHeight;
 
-console.log(`Viewport Size: ${viewportWidth}x${viewportHeight}px`);
+if (viewportWidth < viewportHeight) {
+    console.log("Vertical");
+} else {
+    console.log("Horizontal");
+}

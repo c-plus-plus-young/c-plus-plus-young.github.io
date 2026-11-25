@@ -5,9 +5,6 @@
     --amber-glow: #FFA133;
 }
 
-/* lch(43.1923 0 66.0618) */
-/* oklab(0.510278 -4.47035e-8 2.98023e-8) */
-
 @font-face {
     font-family: "DepartureMono";
     src: url("../assets/fonts/DepartureMono-1.500/DepartureMono-Regular.woff") format("woff");
@@ -53,6 +50,14 @@ a {
 .invisible-div {
     border: none;
     height: 5.91rem;
+}
+
+#games-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
 }
 
 [orientation="portrait"] {
